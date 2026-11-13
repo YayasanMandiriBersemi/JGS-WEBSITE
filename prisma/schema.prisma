@@ -1,0 +1,142 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  GUEST
+  STRATEGIST
+  ADMIN
+}
+
+enum AccountMode {
+  CENT_USC
+  STANDARD_USD
+  DEMO
+}
+
+enum TradeDirection {
+  LONG
+  SHORT
+}
+
+enum TelemetryStatus {
+  DISCONNECTED
+  VERIFIED_LIVE
+  MAINTENANCE
+}
+
+model User {
+  id                String              @id @default(cuid())
+  email             String              @unique
+  displayName       String
+  passwordHash      String?
+  role              UserRole            @default(STRATEGIST)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  onboardingProfile OnboardingProfile?
+  academyProgress   AcademyProgress[]
+  journalEntries    JournalEntry[]
+  riskPresets       RiskPreset[]
+}
+
+model OnboardingProfile {
+  id                     String   @id @default(cuid())
+  userId                 String   @unique
+  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  capitalTier            String
+  experienceLevel        String
+  primaryInstrument      String
+  primaryChallenge       String
+  recommendedRiskPercent Float    @default(1.0)
+  recommendedTrackSlug   String
+  updatedAt              DateTime @updatedAt
+}
+
+model AcademyProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessonSlug  String
+  completed   Boolean  @default(false)
+  quizScore   Int      @default(0)
+  completedAt DateTime @default(now())
+
+  @@unique([userId, lessonSlug])
+}
+
+model JournalEntry {
+  id                       String         @id @default(cuid())
+  userId                   String
+  user                     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  instrument               String
+  accountType              AccountMode    @default(CENT_USC)
+  direction                TradeDirection
+  entryPrice               Float
+  stopLoss                 Float
+  takeProfit               Float
+  exitPrice                Float
+  lotSize                  Float
+  realizedPnl              Float
+  realizedRMultiple        Float
+  setupTag                 String
+  emotionTag               String
+  ruleFollowedStopLoss     Boolean        @default(true)
+  ruleProperLotSize        Boolean        @default(true)
+  ruleWaitedConfirmation   Boolean        @default(true)
+  ruleWithinDailyLimit     Boolean        @default(true)
+  notes                    String?
+  tradedAt                 DateTime       @default(now())
+}
+
+model RiskPreset {
+  id                  String   @id @default(cuid())
+  userId              String
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name                String
+  capitalUsd          Float
+  useCentAccount      Boolean  @default(true)
+  riskPercentPerTrade Float    @default(1.0)
+  dailyMaxLossPercent Float    @default(3.0)
+  defaultInstrument   String   @default("XAUUSD")
+  createdAt           DateTime @default(now())
+}
+
+model PerformanceAccount {
+  id                          String                  @id @default(cuid())
+  strategyCode                String                  @unique
+  name                        String
+  connectionStatus            TelemetryStatus         @default(DISCONNECTED)
+  brokerServer                String?
+  investorAccountNumberMasked String?
+  verificationProvider        String                  @default("NONE")
+  lastVerifiedHeartbeat       DateTime?
+  snapshots                   PerformanceSnapshot[]
+  auditLogs                   AuditVerificationLog[]
+}
+
+model PerformanceSnapshot {
+  id                   String             @id @default(cuid())
+  accountId            String
+  account              PerformanceAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  balanceUsc           Float
+  equityUsc            Float
+  maxDrawdownPercent   Float
+  profitFactor         Float
+  totalClosedTrades    Int
+  payloadSignatureHash String
+  recordedAt           DateTime           @default(now())
+}
+
+model AuditVerificationLog {
+  id           String             @id @default(cuid())
+  accountId    String
+  account      PerformanceAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  status       String
+  verifierNote String
+  checkedAt    DateTime           @default(now())
+}

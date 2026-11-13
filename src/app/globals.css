@@ -1,0 +1,584 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root,
+html[data-theme="dark"] {
+  --font-display: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-serif: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-sans: 'Inter', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Menlo, Monaco, Consolas, monospace;
+  --bg-canvas: #0D0A12;
+  --bg-plum: #0D0A12;
+  --bg-surface-1: #16121F;
+  --bg-surface-2: #1E182B;
+  --bg-surface-3: #282038;
+  --bg-surface: #16121F;
+  --bg-elevated: #1E182B;
+  --bg-input: #0F0B16;
+  --border-input: rgba(214, 169, 55, 0.28);
+  --accent-gold: #D6A937;
+  --accent-gold-light: #F3E5AB;
+  --accent-purple: #7E22CE;
+  --accent-lavender: #B99AE8;
+  --text-ivory: #F4F0FA;
+  --text-secondary: #A89FBA;
+  --text-muted: #8E84A4;
+  --border-subtle: rgba(214, 169, 55, 0.16);
+}
+
+html[data-theme="light"],
+html.light,
+[data-theme="ivory"],
+.theme-ivory {
+  --bg-canvas: #F6F3EC;
+  --bg-plum: #F6F3EC;
+  --bg-surface-1: #FFFFFF;
+  --bg-surface-2: #EFEAE0;
+  --bg-surface-3: #E6DFD0;
+  --bg-surface: #FFFFFF;
+  --bg-elevated: #EFEAE0;
+  --bg-input: #F9F7F1;
+  --border-input: #D4CBB8;
+  --accent-gold: #9E7019;
+  --accent-gold-light: #7D550B;
+  --accent-purple: #6B46A8;
+  --accent-lavender: #6B46A8;
+  --text-ivory: #17131D;
+  --text-secondary: #524A5E;
+  --text-muted: #6E657B;
+  --border-subtle: #E2DAC7;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: var(--bg-canvas);
+  color: var(--text-ivory);
+  scroll-behavior: smooth;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+body {
+  background-color: var(--bg-canvas);
+  color: var(--text-ivory);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  overflow-x: hidden;
+  min-height: 100vh;
+  line-height: 1.65;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Editorial atmosphere */
+.bg-plum-atmosphere {
+  background:
+    radial-gradient(circle at 18% 10%, rgba(185, 154, 232, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 84% 18%, rgba(214, 169, 55, 0.08) 0%, transparent 40%),
+    linear-gradient(180deg, var(--bg-canvas) 0%, var(--bg-surface-1) 50%, var(--bg-canvas) 100%);
+}
+
+/* Smooth Scroll Reveal System */
+.jgs-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.jgs-reveal.jgs-reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jgs-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+@layer components {
+  .jgs-panel {
+    background-color: var(--bg-surface-1);
+    border: 1px solid var(--border-subtle);
+    @apply rounded-2xl transition-all duration-300 ease-out;
+    box-shadow: 0 10px 30px -12px rgba(23, 19, 29, 0.14);
+  }
+
+  .jgs-panel-interactive {
+    background-color: var(--bg-surface-1);
+    border: 1px solid var(--border-subtle);
+    @apply rounded-2xl transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:border-[#D6A937]/60 active:scale-[0.98];
+  }
+
+  .jgs-glass {
+    background-color: color-mix(in srgb, var(--bg-canvas) 92%, transparent);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .jgs-input,
+  .jgs-themed-input {
+    background-color: var(--bg-input) !important;
+    color: var(--text-ivory) !important;
+    border: 1px solid var(--border-input) !important;
+    @apply w-full rounded-xl px-4 py-2.5 font-sans text-sm focus:outline-none focus:border-[#D6A937] transition-colors;
+  }
+
+  .jgs-input::placeholder,
+  .jgs-themed-input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .jgs-label {
+    color: var(--text-secondary);
+    @apply block text-sm font-medium mb-1.5;
+  }
+
+  .jgs-btn-gold {
+    @apply inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-[#D6A937] text-[#17131D] font-semibold text-sm tracking-tight transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:bg-[#F3E5AB] active:scale-[0.98];
+  }
+
+  .jgs-btn-outline {
+    background-color: var(--bg-surface-1);
+    color: var(--text-ivory);
+    @apply inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl border border-[#D6A937]/40 font-medium text-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-xl hover:border-[#D6A937] active:scale-[0.98];
+  }
+
+  /* High-contrast active tab utility (dark ink canvas on ivory/dark themes) */
+  .jgs-tab-active {
+    background-color: #17131D !important;
+    color: #F6F3EC !important;
+    border-color: #D6A937 !important;
+  }
+
+  .jgs-tab-danger {
+    background-color: #B91C1C !important;
+    color: #FFFFFF !important;
+    border-color: #EF4444 !important;
+  }
+
+  /* Crops out bottom baked-in text graphics from jey-mascot.png so only Jey bust/crown/chain is shown */
+  .jgs-mascot-crop {
+    @apply w-full h-full object-cover object-top scale-[1.48] origin-[50%_6%];
+  }
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+textarea,
+select {
+  background-color: var(--bg-input);
+  color: var(--text-ivory);
+  border-color: var(--border-input);
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="search"]:focus,
+textarea:focus,
+select:focus {
+  border-color: #D6A937;
+  outline: none;
+}
+
+/* ============================================================================
+   WARM EDITORIAL IVORY LIGHT MODE HARMONIZATION
+   Covers html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory
+   ============================================================================ */
+
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) body,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-plum-deep,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#08050E\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#0D0A12\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#0B0714\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#09060F\] {
+  background-color: #F6F3EC !important;
+  color: #17131D !important;
+}
+
+/* Surface / Card Backgrounds */
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-plum-surface,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-plum-surface\/90,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-plum-surface\/80,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-plum-surface\/75,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-plum-surface\/70,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-jgs-plum-surface,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-jgs-plum-surface\/80,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-jgs-plum-surface\/85,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-jgs-plum-surface\/75,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-jgs-plum-surface\/70,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#17131D\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#16121F\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#16121F\]\/95,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#1E182B\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#17131D\]\/95,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#1B1526\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#1E1829\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#160D26\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#120B1E\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#211B2A\] {
+  background-color: #FFFFFF !important;
+  color: #17131D !important;
+}
+
+/* Inset / Sub-Surface Backgrounds */
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-jgs-plum-deep,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-jgs-plum-deep\/90,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-jgs-plum-deep\/85,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-jgs-plum-deep\/80,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-jgs-plum-deep\/75,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-jgs-plum-deep\/70,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-jgs-plum-deep\/65,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-jgs-plum-deep\/60,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#0E0B14\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#0E0B14\]\/70,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#191129\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#14101A\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#110B1C\] {
+  background-color: #F2EEE4 !important;
+  color: #17131D !important;
+}
+
+/* Gradient Card Overrides in Ivory Mode so gradient cards don't keep dark plum stops with dark text */
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-gradient-to-br.from-jgs-plum-surface,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-gradient-to-br.from-\[\#1B1526\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-gradient-to-b.from-jgs-plum-surface,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-gradient-to-r.from-\[\#17131D\] {
+  background-image: linear-gradient(135deg, #FFFFFF 0%, #F6F3EC 55%, #EFE9DA 100%) !important;
+  color: #17131D !important;
+}
+
+/* Primary Text -> Strictly #17131D (Deep Ink) on Light Backgrounds */
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-white,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-ivory,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-ivory\/90,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-ivory\/85,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-jgs-ivory,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-\[\#F7F4EE\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-\[\#F7F4EE\]\/95,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-\[\#F7F4EE\]\/90,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-\[\#F6F3EC\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-\[\#F3EFF8\] {
+  color: #17131D !important;
+}
+
+/* Keep explicit Dark Background Active Elements Readable (#F6F3EC on #17131D) */
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .jgs-tab-active,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .jgs-tab-active * {
+  background-color: #17131D !important;
+  color: #F6F3EC !important;
+}
+
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .jgs-tab-danger,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .jgs-tab-danger * {
+  background-color: #B91C1C !important;
+  color: #FFFFFF !important;
+}
+
+/* Preserve obsidian dark chart background & luminous SVG vectors even in Ivory Mode */
+.jgs-chart-frame,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .jgs-chart-frame {
+  background-color: #17131D !important;
+  color: #F3EFF8 !important;
+  border-color: rgba(214, 169, 55, 0.35) !important;
+}
+
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .jgs-chart-frame .jgs-chart-label {
+  color: #B8AFC7 !important;
+}
+
+/* Crisp Semantic Status Panels in Ivory Mode */
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-emerald-950\/20,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-emerald-950\/25,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#0F1B1D\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#0F1B1D\]\/60 {
+  background-color: #ECFDF5 !important;
+  color: #17131D !important;
+}
+
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-red-950\/20,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-red-950\/25,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-red-950\/30,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#1A0D16\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#1A0D16\]\/70 {
+  background-color: #FEF2F2 !important;
+  color: #17131D !important;
+}
+
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-jgs-purple\/25,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-purple-royal\/20,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-purple-royal\/35,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-purple-royal\/40 {
+  background-color: #F3EEFA !important;
+}
+
+/* Soft Gold Active Step Tabs in Ivory Mode (#EFE6D0 bg + #17131D dark text) */
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-jgs-gold\/15,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-jgs-gold\/10 {
+  background-color: #EFE6D0 !important;
+  color: #17131D !important;
+}
+
+/* Secondary & Muted Text -> Strictly #574E63 */
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-ivory\/80,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-ivory\/75,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-ivory\/70,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-ivory\/65,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-jgs-ivory-muted,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-jgs-ivory-faint,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-\[\#BEB6CE\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-\[\#B8B0C8\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-\[\#B8AFC7\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-\[\#8E84A4\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-\[\#7E7494\] {
+  color: #574E63 !important;
+}
+
+/* Burnished Gold Accent Text on Cream/White */
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-gold-metallic,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-gold-champagne,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-jgs-gold,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-jgs-gold-light,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-\[\#D6A937\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-\[\#D4AF37\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-\[\#F3E5AB\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-\[\#F3E5AB\]\/95,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-\[\#F3E5AB\]\/90 {
+  color: #9A6B13 !important;
+}
+
+/* High-Contrast Semantic Accents on Ivory */
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-purple-electric,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-jgs-purple-glow,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-\[\#B99AE8\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-\[\#A882DD\] {
+  color: #6B46A8 !important;
+}
+
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-emerald-300,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-emerald-400 {
+  color: #047857 !important;
+}
+
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-red-300,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-red-400 {
+  color: #B91C1C !important;
+}
+
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .text-amber-300 {
+  color: #9A6B13 !important;
+}
+
+/* Warm Stone Borders (#E2D9C5) */
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .border-white\/10,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .border-white\/15,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .border-white\/20,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .border-white\/\[0\.08\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .border-white\/\[0\.07\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .border-white\/\[0\.05\] {
+  border-color: #E2D9C5 !important;
+}
+
+/* Buttons with gold background always keep Deep Ink dark text */
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-jgs-gold,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#D6A937\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-gold-metallic {
+  color: #17131D !important;
+}
+
+/* Warm Editorial Stone Footer & Bottom CTA Banners in Ivory Mode */
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) footer,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .jgs-footer-surface,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-\[\#06030A\],
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .bg-gradient-to-r.from-\[\#160D26\] {
+  background-color: #EFEAE0 !important;
+  background-image: none !important;
+  color: #17131D !important;
+  border-color: #D8CFC0 !important;
+}
+
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) footer a {
+  color: #574E63 !important;
+}
+
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) footer a:hover {
+  color: #17131D !important;
+}
+
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) footer h2,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) footer h3,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) footer p {
+  color: #17131D !important;
+}
+
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) footer .jgs-btn-gold {
+  color: #17131D !important;
+}
+
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) footer .jgs-btn-outline {
+  background-color: #FFFFFF !important;
+  color: #17131D !important;
+  border-color: #D8CFC0 !important;
+}
+
+/* Force TradingView Embed Iframes to Fill Full 600px Height Without 150px Collapse */
+.tradingview-widget-container iframe,
+.jgs-tv-iframe-600 {
+  width: 100% !important;
+  height: 600px !important;
+  min-height: 600px !important;
+  display: block !important;
+  border: 0 !important;
+}
+
+/* Luxury Metallic Centurion Card Themes (Preserved cleanly in both Ivory & Dark Mode) */
+.jgs-centurion-dark,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .jgs-centurion-dark {
+  background: linear-gradient(135deg, #16111F 0%, #0D0A12 52%, #1E162B 100%) !important;
+  color: #F3EFF8 !important;
+  border-color: rgba(214, 169, 55, 0.55) !important;
+}
+
+.jgs-centurion-dark .jgs-card-ink,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .jgs-centurion-dark .jgs-card-ink {
+  color: #F3EFF8 !important;
+}
+
+.jgs-centurion-dark .jgs-card-muted,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .jgs-centurion-dark .jgs-card-muted {
+  color: #B8AFC7 !important;
+}
+
+.jgs-centurion-dark .jgs-card-gold,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .jgs-centurion-dark .jgs-card-gold {
+  color: #D6A937 !important;
+}
+
+.jgs-centurion-dark .jgs-card-inset,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .jgs-centurion-dark .jgs-card-inset {
+  background-color: rgba(11, 8, 16, 0.72) !important;
+  border-color: rgba(214, 169, 55, 0.28) !important;
+  color: #F3EFF8 !important;
+}
+
+.jgs-centurion-ivory,
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .jgs-centurion-ivory {
+  background: linear-gradient(135deg, #FFFFFF 0%, #F8F5EE 58%, #EFE6D0 100%) !important;
+  color: #17131D !important;
+  border-color: rgba(154, 107, 19, 0.45) !important;
+}
+
+.jgs-centurion-ivory .jgs-card-ink {
+  color: #17131D !important;
+}
+
+.jgs-centurion-ivory .jgs-card-muted {
+  color: #574E63 !important;
+}
+
+.jgs-centurion-ivory .jgs-card-gold {
+  color: #9A6B13 !important;
+}
+
+.jgs-centurion-ivory .jgs-card-inset {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+  border-color: #E2D9C5 !important;
+  color: #17131D !important;
+}
+
+/* Smooth 3D perspective for interactive textbook flashcards & cards */
+.jgs-perspective-1000 {
+  perspective: 1000px;
+}
+
+@keyframes jgsSlowPulse {
+  0%, 100% {
+    opacity: 0.75;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+}
+
+.jgs-ambient-pulse {
+  animation: jgsSlowPulse 4.5s ease-in-out infinite;
+}
+
+@keyframes jgsShake {
+  0%, 100% { transform: translateX(0); }
+  15% { transform: translateX(-6px) rotate(-0.4deg); }
+  30% { transform: translateX(6px) rotate(0.4deg); }
+  45% { transform: translateX(-5px) rotate(-0.3deg); }
+  60% { transform: translateX(4px) rotate(0.2deg); }
+  75% { transform: translateX(-3px); }
+}
+
+.jgs-shake {
+  animation: jgsShake 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* Fintech Typography Override: Firm, Unambiguous Sans-Serif Across Legacy .font-serif Uses */
+.font-serif {
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.025em !important;
+}
+
+/* Hide duplicate bottom CTA banner inside distraction-free PJJ Classroom */
+body[data-jgs-studio="classroom"] .jgs-footer-cta {
+  display: none !important;
+}
+
+/* Ivory Navbar & Soft Stone Card Elevation */
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) .jgs-panel {
+  box-shadow: 0 12px 32px -16px rgba(23, 19, 29, 0.12) !important;
+}
+
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) header.jgs-navbar-surface {
+  background-color: rgba(246, 243, 236, 0.92) !important;
+  border-color: #E2DAC7 !important;
+}
+
+:is(html[data-theme="light"], html.light, [data-theme="ivory"], .theme-ivory) header.jgs-navbar-surface .jgs-nav-dropdown {
+  background-color: rgba(255, 255, 255, 0.98) !important;
+  border-color: #D8CFC0 !important;
+}
+
+/* Justified Textbook Prose without unsightly wide word rivers */
+.jgs-prose-justify {
+  text-align: left;
+  line-height: 1.85;
+  letter-spacing: normal;
+  word-spacing: normal;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+@media (min-width: 640px) {
+  .jgs-prose-justify {
+    text-align: justify;
+    text-justify: inter-word;
+  }
+}
+
+.jgs-prose-justify mark {
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
